@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Button from "../Button";
 import Input from "../Input";
 import Card from "../Card";
+import DragComp from "../DragComp";
 
 export default function Todo({
   showInput,
@@ -11,6 +12,9 @@ export default function Todo({
   setEditTask,
   tasks,
   setTasks,
+  setActiveCard,
+  activeCard,
+  onDrop,
 }) {
   const [value, setValue] = useState("");
   useEffect(() => {
@@ -45,16 +49,23 @@ export default function Todo({
 
   const todoTasks = tasks.filter((task) => task.status === "todo");
   return (
-    <div className="flex flex-col p-3 gap-4">
+    <div className="flex flex-col p-3 gap-2">
       <h2 className="text-2xl text-center">Todo</h2>
+      <DragComp onDrop={() => onDrop("todo", 0)} />
+
       {todoTasks?.map((task, index) => (
-        <Card
-          key={index}
-          task={task}
-          setTasks={setTasks}
-          setShowInput={setShowInput}
-          setEditTask={setEditTask}
-        />
+        <React.Fragment key={index}>
+          <Card
+            index={index}
+            task={task}
+            setTasks={setTasks}
+            setShowInput={setShowInput}
+            setEditTask={setEditTask}
+            setActiveCard={setActiveCard}
+            activeCard={activeCard}
+          />
+          <DragComp onDrop={() => onDrop("todo", index + 1)} />
+        </React.Fragment>
       ))}
       {showInput && <Input value={value} setValue={setValue} />}
       <Button

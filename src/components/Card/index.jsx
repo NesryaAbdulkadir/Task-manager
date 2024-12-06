@@ -6,16 +6,9 @@ export default function Card({
   setTasks,
   setShowInput,
   setEditTask,
-  showInput,
+  index,
+  setActiveCard,
 }) {
-  function handleStatusChange(newStatus) {
-    setTasks((prevTasks) =>
-      prevTasks.map((t) =>
-        t.task === task.task ? { ...t, status: newStatus } : t
-      )
-    );
-  }
-
   function handleEdit(task) {
     setShowInput(true);
     setEditTask(task);
@@ -23,39 +16,25 @@ export default function Card({
   function handleDelete(task) {
     setTasks((prevTasks) => prevTasks.filter((t) => t.task !== task.task));
   }
-
+  function handleDragStart() {
+    setActiveCard(index);
+  }
   return (
-    <div className="p-5 bg-white shadow-md rounded-md flex flex-col gap-4">
+    <div
+      className="p-5 bg-white shadow-md rounded-md flex flex-col gap-4 active:border-2 cursor-grab active:border-gray-400"
+      onDragStart={handleDragStart}
+      draggable
+    >
       <div className="flex gap-4 justify-between">
         <p className="text-xl">{task.task}</p>
         <div className="flex gap-4">
           <button onClick={() => handleEdit(task)}>
-            <Edit />
+            <Edit className="text-gray-500 hover:text-gray-900" />
           </button>
           <button onClick={() => handleDelete(task)}>
-            <Delete />
+            <Delete className="text-gray-500 hover:text-gray-900" />
           </button>
         </div>
-      </div>
-      <div className="flex gap-4 text-sm text-gray-500">
-        {task?.status === "todo" && (
-          <>
-            <button onClick={() => handleStatusChange("done")}>Done</button>
-            <button onClick={() => handleStatusChange("doing")}>Doing</button>
-          </>
-        )}
-        {task?.status === "doing" && (
-          <>
-            <button onClick={() => handleStatusChange("todo")}>Todo</button>
-            <button onClick={() => handleStatusChange("done")}>Done</button>
-          </>
-        )}
-        {task?.status === "done" && (
-          <>
-            <button onClick={() => handleStatusChange("todo")}>Todo</button>
-            <button onClick={() => handleStatusChange("doing")}>Doing</button>
-          </>
-        )}
       </div>
     </div>
   );
