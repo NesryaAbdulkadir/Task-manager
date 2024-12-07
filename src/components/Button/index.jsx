@@ -1,12 +1,6 @@
 import React from "react";
 
-export default function Button({
-  showInput,
-  setShowInput,
-  name,
-  handleClick,
-  editTask,
-}) {
+export default function Button({ showInput, setShowInput, handleClick }) {
   const handleButtonClick = () => {
     if (!showInput) {
       setShowInput(true);

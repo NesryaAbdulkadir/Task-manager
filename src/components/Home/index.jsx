@@ -2,6 +2,7 @@ import React, { act, useEffect, useState } from "react";
 import Doing from "../Doing";
 import Todo from "../Todo";
 import Done from "../Done";
+import TaskColumn from "../TaskColumn";
 
 export default function Home() {
   const [tasks, setTasks] = useState(
@@ -24,59 +25,57 @@ export default function Home() {
     }
   }, []);
   const onDrop = (status, position) => {
-    if (activeCard == null) return;
+    if (activeCard === null || activeCard === undefined) return;
 
     const taskToMove = tasks[activeCard];
-    if (!taskToMove) return;
-
-    // Update task status
-    const updatedTasks = tasks.filter((_, index) => index !== activeCard);
-    if (position > updatedTasks.length) position = updatedTasks.length;
-
-    updatedTasks.splice(position, 0, { ...taskToMove, status });
-
+    const updatedTasks = tasks.filter((tasks, index) => index !== activeCard);
+    updatedTasks.splice(position, 0, {
+      ...taskToMove,
+      status: status,
+    });
     setTasks(updatedTasks);
-    setActiveCard(null); // Clear active card after drop
   };
 
   return (
-    <div className="grid grid-cols-3 gap-4">
-      <Todo
-        showInput={showTodoInput}
-        setShowInput={setShowTodoInput}
-        tasks={tasks}
-        setTasks={setTasks}
-        setEditTask={setEditTask}
-        editTask={editTask}
-        name={"todo"}
-        setActiveCard={setActiveCard}
-        activeCard={activeCard}
-        onDrop={onDrop}
-      />
-      <Doing
-        showInput={showDoingInput}
-        setShowInput={setShowDoingInput}
-        tasks={tasks}
-        setTasks={setTasks}
-        setEditTask={setEditTask}
-        editTask={editTask}
-        name={"doing"}
-        setActiveCard={setActiveCard}
-        activeCard={activeCard}
-        onDrop={onDrop}
-      />
-      <Done
-        showInput={showDoneInput}
-        setShowInput={setShowDoneInput}
-        tasks={tasks}
-        setTasks={setTasks}
-        setEditTask={setEditTask}
-        editTask={editTask}
-        name={"done"}
-        setActiveCard={setActiveCard}
-        activeCard={activeCard}
-        onDrop={onDrop}
-      />
-    </div>
+    <>
+      <div className="grid grid-cols-3 gap-4">
+        <TaskColumn
+          title="Todo"
+          status="todo"
+          showInput={showTodoInput}
+          setShowInput={setShowTodoInput}
+          tasks={tasks}
+          setTasks={setTasks}
+          setEditTask={setEditTask}
+          editTask={editTask}
+          setActiveCard={setActiveCard}
+          onDrop={onDrop}
+        />
+        <TaskColumn
+          title="Doing"
+          status="doing"
+          showInput={showDoingInput}
+          setShowInput={setShowDoingInput}
+          tasks={tasks}
+          setTasks={setTasks}
+          setEditTask={setEditTask}
+          editTask={editTask}
+          setActiveCard={setActiveCard}
+          onDrop={onDrop}
+        />
+        <TaskColumn
+          title="Done"
+          status="done"
+          showInput={showDoneInput}
+          setShowInput={setShowDoneInput}
+          tasks={tasks}
+          setTasks={setTasks}
+          setEditTask={setEditTask}
+          editTask={editTask}
+          setActiveCard={setActiveCard}
+          onDrop={onDrop}
+        />
+      </div>
+    </>
   );
 }
